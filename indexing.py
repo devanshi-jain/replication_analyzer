@@ -1,127 +1,83 @@
+# /////////////////////////////////SETUP////////////////////////////////////////
 from dotenv import load_dotenv
 import os
 import logging
 import sys
 import requests
-import requests
-# from pybtex.database import parse_file
+import openai
+import re
 
-# bibtex_file = "bibtex.bib"
+# import necessary libraries
+from io import StringIO
+from pdfminer.layout import LAParams
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfpage import PDFPage
+from pdfminer.layout import LTTextBox, LTTextLine
+from pdfminer.converter import PDFPageAggregator, TextConverter
+from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 
-# # Parse the bibtex file
-# bib_data = parse_file(bibtex_file)
+load_dotenv()
 
-# # Extract the first entry from the bibtex file
-# entry = list(bib_data.entries.values())[0]
+# Get value of OPENAI_API_KEY environment variable
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
-# # Extract the PDF URL from the bibtex entry
-# pdf_url = entry.fields["url"]
-
-# # Send a GET request to download the PDF file
-# response = requests.get(pdf_url)
-
-# # Save the PDF file in the current directory
-# with open("paper.pdf", "wb") as file:
-#     file.write(response.content)
+# Set the API key for the OpenAI API client
+openai.api_key = openai_api_key
 
 
-# logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-# logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+# Function to parse the PDF and extract citations
+def parse_pdf_citations(file_path):
+    citations = []
 
-# from llama_index import GPTVectorStoreIndex, download_loader
-# from IPython.display import Markdown, display
+    with open(file_path, 'rb') as pdf_file:
+        parser = PDFParser(pdf_file)
+        document = PDFDocument(parser)
+        parser.set_document(document)
 
-# # Reference: https://colab.research.google.com/drive/12cdBWMpOfCxpiAS1zSqZRY66o84qMiTo?usp=sharing#scrollTo=690a6918-7c75-4f95-9ccc-d2c4a1fe00d7
+        for page in PDFPage.create_pages(document):
+            interpreter = PDFPageInterpreter(PDFResourceManager(), PDFPageAggregator(PDFResourceManager()))
+            citations_found = False  # Flag to indicate if citations are found on the page
+            citations_on_page = []  # List to store citations found on the page
 
-# # To use SimpleWebPageReader
+            interpreter.process_page(page)
+            layout = interpreter.get_result()
 
-# # build index # download web page loader from LlamaHub
-# SimpleWebPageReader = download_loader("SimpleWebPageReader")
+            for element in layout:
+                if isinstance(element, LTTextBox) or isinstance(element, LTTextLine):
+                    text = element.get_text().strip()
 
-# # load in PG's essay
-# documents = SimpleWebPageReader(html_to_text=True).load_data(["http://paulgraham.com/worked.html"])
+                    # Regular expression pattern to match citations
+                    citation_pattern = r"\[(\d+)\]"
 
-# documents[0].get_text()
+                    # Find all citations in the text
+                    matches = re.findall(citation_pattern, text)
+                    if matches:
+                        citations_found = True
+                        citations_on_page.extend([int(match) for match in matches])
 
-# index = GPTVectorStoreIndex.from_documents(documents)
-# # load_dotenv()
-# # set Logging to DEBUG for more detailed outputs
-# query_engine = index.as_query_engine()
-# response = query_engine.query("What did the author do growing up?")
-# display(Markdown(f"<b>{response}</b>"))
+            if citations_found:
+                citations.extend(citations_on_page)
 
-# sn1 = response.source_nodes[0]
-# sn1.similarity
-# print(sn1.node.get_text())
+    return citations
 
-# # set Logging to DEBUG for more detailed outputs
-# query_engine = index.as_query_engine()
-# response = query_engine.query("What are times the author was angry?")
 
-# # display(Markdown(f"<b>{response}</b>"))
-# # print(response.get_formatted_sources())
+pdf_file_path_1 = "/path/to/paper1.pdf"
+pdf_file_path_2 = "/path/to/paper2.pdf"
 
-# # # Use Image Reader
+# Create Paper instances for the two papers
+paper1 = Paper(title="Paper 1", doi="doi-1", publication_date="2023-06-01")
+paper2 = Paper(title="Paper 2", doi="doi-2", publication_date="2023-06-02")
 
-# # from llama_index.response.notebook_utils import (
-# #     display_response,
-# #     display_image,
-# # )
-# # from llama_index.indices.query.query_transform.base import (
-# #     ImageOutputQueryTransform,
-# # )
+# Extract the citations for paper 1
+citations_1 = parse_pdf_citations(pdf_file_path_1)
 
-# import PyPDF2
+# Extract the citations for paper 2
+citations_2 = parse_pdf_citations(pdf_file_path_2)
 
-# def extract_text_from_pdf(file_path):
-#     with open(file_path, 'rb') as file:
-#         reader = PyPDF2.PdfFileReader(file)
-#         text = ""
-#         for page_num in range(reader.numPages):
-#             page = reader.getPage(page_num)
-#             text += page.extractText()
-#         return text
+# Establish citation relationship between the papers
+if paper1.doi in citations_2:
+    paper2.add_citation(paper1)
 
-# def find_citations(text):
-#     # Perform citation extraction logic here
-#     # You can use regular expressions or other techniques to identify citations
-    
-#     # Example: Identifying citations in square brackets, e.g., [1], [2], etc.
-#     import re
-#     citations = re.findall(r'\[\d+\]', text)
-#     return citations
-
-# def check_citation(citations, target_paper_title):
-#     for citation in citations:
-#         if target_paper_title in citation:
-#             return True
-#     return False
-
-# # PDF file paths
-# pdf1_path = 'path/to/first_paper.pdf'
-# pdf2_path = 'path/to/second_paper.pdf'
-
-# # Extract text from PDFs
-# pdf1_text = extract_text_from_pdf(pdf1_path)
-# pdf2_text = extract_text_from_pdf(pdf2_path)
-
-# # Find citations in each paper
-# pdf1_citations = find_citations(pdf1_text)
-# pdf2_citations = find_citations(pdf2_text)
-
-# # Print the citations
-# print("Citations in PDF 1:")
-# for citation in pdf1_citations:
-#     print(citation)
-# print()
-
-# print("Citations in PDF 2:")
-# for citation in pdf2_citations:
-#     print(citation)
-# print()
-
-# # Check if PDF 2 cites PDF 1
-# if check_citation(pdf2_citations, "PDF 1 Title"):
-#     print("PDF 2 cites PDF 1")
-# else:
-#     print("PDF 2 does not cite PDF 1")
+if paper2.doi in citations_1:
+    paper1.add_citation(paper2)
