@@ -1,0 +1,9 @@
+import scholarly
+from scholarly import ProxyGenerator
+from paper_repository import Paper
+
+def retrieveCitedBy(paper):
+    search_query = scholarly.search_pubs(paper.title)
+    scholarItem = next(search_query)
+    citedBy = [citation['bib']['title'] for citation in scholarly.citedby(scholarItem)]
+    return citedBy
