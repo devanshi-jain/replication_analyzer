@@ -4,29 +4,30 @@ import logging
 import sys
 import requests
 import requests
-from pybtex.database import parse_file
+# from pybtex.database import parse_file
 
-bibtex_file = "bibtex.bib"
+# bibtex_file = "bibtex.bib"
 
-# Parse the bibtex file
-bib_data = parse_file(bibtex_file)
+# # Parse the bibtex file
+# bib_data = parse_file(bibtex_file)
 
-# Extract the first entry from the bibtex file
-entry = list(bib_data.entries.values())[0]
+# # Extract the first entry from the bibtex file
+# entry = list(bib_data.entries.values())[0]
 
-# Extract the PDF URL from the bibtex entry
-pdf_url = entry.fields["url"]
+# # Extract the PDF URL from the bibtex entry
+# pdf_url = entry.fields["url"]
 
-# Send a GET request to download the PDF file
-response = requests.get(pdf_url)
+# # Send a GET request to download the PDF file
+# response = requests.get(pdf_url)
 
-# Save the PDF file in the current directory
-with open("paper.pdf", "wb") as file:
-    file.write(response.content)
+# # Save the PDF file in the current directory
+# with open("paper.pdf", "wb") as file:
+#     file.write(response.content)
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+# logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+# logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+
 # from llama_index import GPTVectorStoreIndex, download_loader
 # from IPython.display import Markdown, display
 
