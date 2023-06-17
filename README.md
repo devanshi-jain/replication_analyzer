@@ -1,2 +1,2 @@
-# replication_studies
+# replication_analyzer
 Research Paper Credibility Analyzer
