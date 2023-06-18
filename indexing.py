@@ -19,6 +19,10 @@ from pdfminer.layout import LTTextBox, LTTextLine
 from pdfminer.converter import PDFPageAggregator, TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 from dotenv import load_dotenv
+from citationTree import CitationTree
+from paper_repository import Paper
+from utils import createPaperFromDoi
+
 
 # Load environment variables from .env file
 from dotenv import load_dotenv, find_dotenv
@@ -63,6 +67,18 @@ def parse_pdf_citations(file_path):
 
     return citations
 
+def calculate_score(citing_paper):
+    score = 0
+
+    # Criteria 1: Number of citations
+    score += len(citing_paper.cited_by)
+
+    # Criteria 2: Self-citations
+    self_citations = [doi for doi in citing_paper.cited_by if doi == citing_paper.doi]
+    score += len(self_citations)
+
+    return score
+
 def check_reproduction(pdf1_path, pdf2_path):
     # Extract the citations from PDF1
     citations_pdf1 = parse_pdf_citations(pdf1_path)
@@ -98,6 +114,57 @@ def check_reproduction(pdf1_path, pdf2_path):
     else:
         print("PDF2 does not cite PDF1")
 
+    # Generate the citation tree
+    target_paper = createPaperFromDoi("target_paper_doi")  # Replace "target_paper_doi" with the actual DOI
+    citation_tree = CitationTree(target_paper).retrieveGraph()
+
+    # Iterate over the nodes in the citation tree
+    for node in citation_tree.nodes:
+        doi = citation_tree.nodes[node]['data'].doi
+
+        # Skip the target paper itself
+        if doi == target_paper.doi:
+            continue
+
+        # Download or retrieve the paper based on DOI
+        paper = createPaperFromDoi(doi)
+
+        # Analyze the paper or retrieve the abstract
+        if paper != -1:
+            analyze_paper(paper)  # Call your analysis function here
+        else:
+            abstract = retrieve_abstract(doi)  # Implement the function to retrieve the abstract
+
+            # Use the abstract for prompt engineering
+            prompt = f"""
+            Abstract of the paper with DOI {doi}:
+            {abstract}
+            """
+            response = get_completion(prompt)
+            # Process the response and give it a score
+
+        # Add the score to the CitationNode's value
+        # citation_tree.nodes[node]['data'].val = score
+        # Iterate over the nodes in the citation tree
+        for node in citation_tree.nodes:
+            doi = citation_tree.nodes[node]['data'].doi
+
+            # Skip the target paper itself
+            if doi == target_paper.doi:
+                continue
+
+            # Download or retrieve the paper based on DOI
+            paper = createPaperFromDoi(doi)
+
+            # Calculate the score for the paper
+            score = calculate_score(paper)
+
+            # Add the score to the CitationNode's value
+            citation_tree.nodes[node]['data'].val = score
+
+    # Generate the multicolored graph based on validation scores
+    # Use the citation_tree to plot the graph
+
     # Send prompt to OpenAI API to check if PDF2 reproduces the results of PDF1
     prompt = f"""
     The paper in PDF2 cites the paper in PDF1. Based on this information, does the paper in PDF2 reproduce the results of the paper in PDF1?
@@ -108,6 +175,8 @@ def check_reproduction(pdf1_path, pdf2_path):
     response = get_completion(prompt)
     print("Response from OpenAI API:")
     print(response)
+
+
 
 # Paths to the PDF files
 pdf1_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/doi_research_papers/Coordinated Speed Oscillations in Schooling Killifish Enrich Social Communication. Journal of Nonlinear Science, 25(5).pdf"
