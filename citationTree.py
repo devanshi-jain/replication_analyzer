@@ -9,7 +9,6 @@ class CitationNode:
         self.title = paper.title
         self.author = paper.author
         self.doi = paper.doi
-        self.sources = None
         self.val = 0
     
     def retrieveCitedBy(self):
@@ -40,7 +39,27 @@ class CitationTree:
         self.graph.add_node(seed.doi, data=seed)
 
         #expand the seed toward the citeby
-        layer1list = []
+        #now, expand the seed toward the sources
+        neglist = []
+        maxlen = min(10, len(paper.sources)) #creating artificial cap for computation reasons
+        for doisub1 in paper.sources[:maxlen]:
+            print("Layer -1 Retrieval")
+            layersub1paper = createPaperLiteFromDoi(doisub1, client)
+            if layersub1paper != -1:
+                # print("Layer 0 Retrieval")
+                layersub1node = CitationNode(layersub1paper)
+                self.graph.add_node(doisub1, data=layersub1node)
+                self.graph.add_edge(doisub1, seed.doi, weight=4)
+                neglist.append(doisub1)
+                #now, create the directed entry to the middle layer nodes
+                # for doi0 in layersub1node.sources:
+                #     layer0paper = createPaperFromDoi(doi0)
+                #     if createPaperFromDoi(doi0) != -1:
+                #         layer0node = CitationNode(layer0paper)
+                #         self.graph.add_node(doi0, data=layer0node)
+                #         self.graph.add_edge(doisub1, doi0, weight=4)
+
+        
         maxlen = min(10, len(paper.cited_by)) #creating artificial cap for computation reasons
         for doi1 in paper.cited_by[:maxlen]:
             #first, create a directed entry back toward the seed node.
@@ -49,10 +68,14 @@ class CitationTree:
             if layer1paper != -1:
                 # print("Layer 2 Retrieval")
                 layer1node = CitationNode(layer1paper)
-                layer1node.sources = layer1paper.sources
                 self.graph.add_node(doi1, data=layer1node)
                 self.graph.add_edge(seed.doi, doi1, weight=4)
                 layer1list += layer1node
+
+                #special program to link across the first layer
+                for doi in layer1paper.sources:
+                    if doi in neglist:
+                        self.graph.add_edge(doi, doi1, weight=4)
                 #now, create the directed entry from the second degree nodes
                 # for doi2 in layer1node.cited_by:
                 #     layer2paper = createPaperFromDoi(doi2)
@@ -63,30 +86,6 @@ class CitationTree:
             else:
                 print("Paper data not found!")
                 continue
-        
-        #now, expand the seed toward the sources
-        maxlen = min(10, len(paper.sources)) #creating artificial cap for computation reasons
-        for doisub1 in paper.sources[:maxlen]:
-            print("Layer -1 Retrieval")
-            layersub1paper = createPaperLiteFromDoi(doisub1, client)
-            if layersub1paper != -1:
-                # print("Layer 0 Retrieval")
-                layersub1node = CitationNode(layersub1paper)
-                self.graph.add_node(doisub1, data=layersub1node)
-                self.graph.add_edge(doisub1, seed.doi, weight=4)
-                #now, create the directed entry to the middle layer nodes
-                # for doi0 in layersub1node.sources:
-                #     layer0paper = createPaperFromDoi(doi0)
-                #     if createPaperFromDoi(doi0) != -1:
-                #         layer0node = CitationNode(layer0paper)
-                #         self.graph.add_node(doi0, data=layer0node)
-                #         self.graph.add_edge(doisub1, doi0, weight=4)
-        
-        #now, special treat: connect the layer 1 to the layer -1
-        # maxlen = min(30, len(paper.cited_by))
-        # for node in layer1list:
-        #     for doi in node:
-        #         if doi
 
     #return the graph to process in the main function
     def retrieveGraph(self):
