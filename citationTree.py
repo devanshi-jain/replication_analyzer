@@ -74,7 +74,7 @@ class CitationTree:
 
                 #special program to link across the first layer
                 for doi in layer1paper.sources:
-                    if doi in neglist:
+                    if doi in neglist and doi != seed.doi:
                         self.graph.add_edge(doi, doi1, weight=4)
                 #now, create the directed entry from the second degree nodes
                 # for doi2 in layer1node.cited_by:
