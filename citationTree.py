@@ -8,8 +8,6 @@ class CitationNode:
         self.title = paper.title
         self.author = paper.author
         self.doi = paper.doi
-        self.sources = paper.sources #list of DOIs
-        self.cited_by = paper.cited_by #list of DOIs
         self.val = 0
     
     def retrieveCitedBy(self):
@@ -24,7 +22,7 @@ class CitationNode:
 class CitationTree:
     def __init__(self, paper):
         self.graph = nx.DiGraph()
-        self.generateFromSeed(paper)
+        self.generateFromPaper(paper)
     
 
     #method: generate individual DOI nodes, including their CitationNodes, with directed graph relationships.
@@ -33,13 +31,13 @@ class CitationTree:
         #doi1 refers to 1 degree of seperation (the people who cite the target paper directly)
         #doisub1 refers to 1 degree of seperation, in the reference direction, (what the target paper cites)
         #doi0 refers to the 2 degree seperation, but in a reference then cited by direction, putting it on the same level/recency as the target paper.
-    def generateFromSeed(self, paper):
+    def generateFromPaper(self, paper):
 
         seed = CitationNode(paper)
         self.graph.add_node(seed.doi, data=seed)
 
         #expand the seed toward the citeby
-        for doi1 in seed.cited_by:
+        for doi1 in paper.cited_by:
             #first, create a directed entry back toward the seed node.
             print("Layer 1 Retrieval")
             layer1paper = createPaperFromDoi(doi1)
@@ -60,7 +58,7 @@ class CitationTree:
                 continue
         
         #now, expand the seed toward the sources
-        for doisub1 in seed.sources:
+        for doisub1 in paper.sources:
             print("Layer -1 Retrieval")
             layersub1paper = createPaperFromDoi(doisub1)
             if layersub1paper != -1:
