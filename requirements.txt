@@ -1,4 +1,4 @@
 pybtex
-scholarly
-pydrive
 scidownl
+opencitingpy
+google-api-python-client
