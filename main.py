@@ -53,12 +53,12 @@ def __main__():
                         print("Unable to locate abstract of this paper. Skipping this node.")
                     else:
                         continue
-                        promptAgent.check_repoduction(gfagawwabnfwafnwafat, True, abstract)
 
                 else:
                     #do stuff here to check reproduction and propogate the score through associated areas
                     print("Analyzing...")
-                    correlation, score = promptAgent.check_repoduction(gfagawwabnfwafnwafat, True)
+                    scoreComputer()
+                    
 
             for doi in seed.retrieveSources():
                 #first, try to retrieve the paper itself.
@@ -78,10 +78,25 @@ def __main__():
 
     return 0
 
-def scoreComputer():
+def scoreComputer(corr, repScore, DOI1, DOI2):
     #send whatever input is required to the prompt engineer
     #Returns : correlation score[0,1] and reproducibility score [-1,1]
     corr, repScore = 0, 0
-    seed.value = 1
-    tree.graph.no
-    G.nodes[0].val += correlation * 1
+    score = corr * repScore
+    
+    tree.graph.nodes[DOI1][0].val += score
+    tree.graph.nodes[DOI2][0].val += score / 2
+    
+    # Add the score to the CitationNode's value
+    # citation_tree.nodes[node]['data'].val = score
+    # Iterate over the nodes in the citation tree
+    for node in tree.graph.nodes:
+        doi = tree.graph.nodes[node]['data'].doi
+
+        # Skip the target paper itself
+        if doi == DOI1 or doi == DOI2:
+            continue
+
+        # Add the score to the CitationNode's value
+        tree.nodes[node]['data'].val = score
+
