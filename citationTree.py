@@ -6,6 +6,7 @@ import opencitingpy
 import mplcursors
 import numpy as np
 import random
+from display import displayInteractableGraph
 
 class CitationNode:
     def __init__(self, paper):
@@ -111,53 +112,4 @@ if __name__ == "__main__":
     tree = CitationTree(test).retrieveGraph()
     print(tree)
 
-    def rgb_to_hex(red, green, blue):
-        color_hex = "#{:02x}{:02x}{:02x}".format(red, green, blue)
-        return color_hex
-
-    # update labels
-    labeling = {}
-    pos = {}
-    colors = []
-    for node_name, node_attr in tree.nodes.items():
-        # PI last name as label
-        pos[node_name]=(node_attr["data"].xtier, node_attr["data"].tier)
-        node_pi = node_attr["data"].author[0].split(',')[0]
-        labeling[node_name] = node_pi
-        node_val = node_attr["data"].val
-        #delete this test
-        # node_val = random.randint(-100, 100)
-        print(node_val)
-        color = "#D3D3D3"
-
-        if node_val < 0: 
-            color = rgb_to_hex(10 + int(-node_val*2.4), 20, 20)
-        elif node_val > 0: 
-            color = rgb_to_hex(20, 10 + int(node_val*2.4), 20)
-        colors.append(color)
-        print(colors)
-
-    nodes = nx.draw(tree, pos, with_labels = True, labels = labeling, node_size=800, font_size = 7, node_color=colors, edge_color='gray')
-    
-    # arrow + display features
-    def update_annot(sel):
-        node_index = sel.target.index
-        #number index
-        node_name = list(tree.nodes)[node_index]
-        node_attr = tree.nodes[node_name]
-        node_title = node_attr["data"].title
-        node_author = node_attr["data"].author
-        node_doi = node_attr["data"].doi
-        node_pi =node_author[0] 
-        node_val = node_attr["data"].val
-
-        text = node_title + "\n" + node_doi 
-        sel.annotation.set_text(text)
-        sel.annotation.get_bbox_patch().set(fc="white")
-
-    cursor = mplcursors.cursor(nodes, hover=True)
-    cursor.connect('add', update_annot)
-
-    #zoom feature
-    # Press move feature on graph + CTRL button
-    plt.show()
+    displayInteractableGraph(tree)

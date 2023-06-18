@@ -6,3 +6,4 @@ networkx
 metapub
 mplcursors
 pdfminer
+llama-index

@@ -5,6 +5,7 @@ import opencitingpy
 from paper_repository import Paper
 from citationTree import CitationTree, CitationNode
 from promptAgent import check_reproduction
+from display import displayInteractableGraph
 
 def main():
     
@@ -96,7 +97,9 @@ def main():
                     print("Not found in existing tree, skipping.")
 
             #now, present the completed CitationTree, with nodes.
+            displayInteractableGraph(tree.graph)
             #dump the tree too as well into a json file
+            
 
     return 0
 
