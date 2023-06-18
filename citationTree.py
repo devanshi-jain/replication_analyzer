@@ -3,6 +3,7 @@ from utils import createPaperLiteFromDoi, createPaperFromDoi, createPaperLessLit
 import networkx as nx
 import matplotlib.pyplot as plt
 import opencitingpy
+import mplcursors
 
 class CitationNode:
     def __init__(self, paper):
@@ -41,7 +42,7 @@ class CitationTree:
         #expand the seed toward the citeby
         #now, expand the seed toward the sources
         neglist = []
-        maxlen = min(10, len(paper.sources)) #creating artificial cap for computation reasons
+        maxlen = min(5, len(paper.sources)) #creating artificial cap for computation reasons
         for doisub1 in paper.sources[:maxlen]:
             print("Layer -1 Retrieval")
             layersub1paper = createPaperLiteFromDoi(doisub1, client)
@@ -60,7 +61,7 @@ class CitationTree:
                 #         self.graph.add_edge(doisub1, doi0, weight=4)
 
         
-        maxlen = min(10, len(paper.cited_by)) #creating artificial cap for computation reasons
+        maxlen = min(5, len(paper.cited_by)) #creating artificial cap for computation reasons
         for doi1 in paper.cited_by[:maxlen]:
             #first, create a directed entry back toward the seed node.
             print("Layer 1 Retrieval")
@@ -96,6 +97,20 @@ if __name__ == "__main__":
     tree = CitationTree(test).retrieveGraph()
     print(tree)
     pos = nx.spring_layout(tree) 
-    nx.draw(tree, pos, with_labels=True, node_size=500, node_color='lightblue', edge_color='gray')
+    nodes = nx.draw(tree, pos, with_labels=True, node_size=500, node_color='lightgreen', edge_color='gray')
+    # arrow features
+    def update_annot(sel):
+        node_index = sel.target.index
+        node_name = list(tree.nodes)[node_index]
+        node_attr = tree.nodes[node_name]
+        text = node_name + ' is the name'
+        sel.annotation.set_text(text)
+        sel.annotation.get_bbox_patch().set(fc="white")
+
+    cursor = mplcursors.cursor(nodes, hover=True)
+    cursor.connect('add', update_annot)
+
+    #zoom feature
+    # Press move feature on graph + CTRL button
     plt.show()
 

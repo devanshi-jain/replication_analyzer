@@ -15,15 +15,19 @@ print(graph)
 
 # Draw the graph
 pos = nx.spring_layout(graph)  # Layout algorithm for node positioning
-nx.draw(graph, pos, with_labels=True, node_size=500, node_color='lightgreen', edge_color='gray')
+# if one pointing to is more negative then make red
+nodes = nx.draw(graph, pos, with_labels=True, node_size=500, node_color='lightgreen', edge_color='gray')
 
-# arrow features
-cursor = mplcursors.cursor(hover=True)
-@cursor.connect("add")
-
-def _(sel):
-    sel.annotation.set_text(f"add info here")
+def update_annot(sel):
+    node_index = sel.target.index
+    node_name = list(graph.nodes)[node_index]
+    node_attr = graph.nodes[node_name]
+    text = node_name + ' is the name'
+    sel.annotation.set_text(text)
     sel.annotation.get_bbox_patch().set(fc="white")
+
+cursor = mplcursors.cursor(nodes, hover=True)
+cursor.connect('add', update_annot)
 
 #zoom feature
 # Press move feature on graph + CTRL button
