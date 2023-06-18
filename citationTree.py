@@ -1,10 +1,12 @@
 from paper_repository import Paper
 from utils import createPaperFromDoi
 import networkx as nx
+import matplotlib.pyplot as plt
 
 class CitationNode:
     def __init__(self, paper):
         self.title = paper.title
+        self.author = paper.author
         self.doi = paper.doi
         self.sources = paper.sources #list of DOIs
         self.cited_by = paper.cited_by #list of DOIs
@@ -73,3 +75,11 @@ class CitationTree:
     #return the graph to process in the main function
     def retrieveGraph(self):
         return self.graph
+    
+if __name__ == "main":
+    test = createPaperFromDoi("10.1186/1756-8722-6-59")
+    tree = CitationTree(test).retrieveGraph()
+    pos = nx.spring_layout(tree) 
+    nx.draw(tree, pos, with_labels=True, node_size=500, node_color='lightblue', edge_color='gray')
+    plt.show()
+

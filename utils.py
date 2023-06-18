@@ -10,3 +10,7 @@ def createPaperFromDoi(doi):
         return -1
     metadata = metadata[0]
     return Paper(title = metadata.title, doi = doi, cited_by = cited_by, sources = sources, publication_date = metadata.year)
+
+#outputs a return code: 0 if retrieved successfully, -1 if not retrieved (will be used to determine whether or not to use abstract)
+def retrievePaperFromDrive(title):
+    return -1
