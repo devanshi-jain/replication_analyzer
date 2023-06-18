@@ -2,7 +2,7 @@ import opencitingpy
 import json
 
 class Paper:
-    def __init__(self, title, doi, cited_by=None, sources=None, publication_date=None, author = None, client = None):
+    def __init__(self, title, doi, cited_by=None, sources=None, publication_date=None, author = None, client = None, num_citations = None):
         if client == None:
             client = opencitingpy.client.Client()
         self.title = title
@@ -21,6 +21,7 @@ class Paper:
         if self.metadata != []:
             self.author = self.metadata[0].author
             self.publication_date = self.metadata[0].year
+            self.num_citations = self.metadata[0].citation_count
 
     def add_citation(self, paper):
         self.cited_by.append(paper)

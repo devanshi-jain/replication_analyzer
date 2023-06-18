@@ -7,6 +7,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 from google.oauth2 import service_account
 import io
+import random
 
 def createPaperFromDoi(doi, client):
     metadata = client.get_metadata(doi)
@@ -153,6 +154,10 @@ def uploadFolderToDrive():
             drive_service.files().create(body=file_metadata, media_body=media).execute()
 
     print(f"Uploaded folder '{folder_name}' to Google Drive with ID: {drive_folder_id}")
+
+def randomGPTOutput():
+    corr, score = random.random(0, 1), random.random(-1, 1)
+    return corr, score
 
 if __name__ == "__main__":
     #test case for retrieveAbstract
