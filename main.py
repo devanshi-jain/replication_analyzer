@@ -1,4 +1,4 @@
-from utils import retrievePaperFromDrive, retrievePaper, retrieveAbstract
+from utils import retrievePaperFromDrive, retrievePaper, retrieveAbstract, randomGPTOutput
 import os
 import json
 import opencitingpy
@@ -55,12 +55,14 @@ def main():
                         if abstract == -1:
                             print("Unable to locate abstract of this paper. Skipping this node.")
                         else:
-                            continue
-                            promptAgent.check_repoduction(gfagawwabnfwafnwafat, True, abstract)
+                            print("Analyzing...")
+                            correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                            scoreComputer(correlation, score, seed.doi, doi, tree)
                     else:
                         #do stuff here to check reproduction and propogate the score through associated areas
                         print("Analyzing...")
-                        #correlation, score = promptAgent.check_repoduction(gfagawwabnfwafnwafat, True)
+                        correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                        scoreComputer(correlation, score, seed.doi, doi, tree)
                 except:
                     print("Not found in existing tree, skipping.")
 
@@ -74,12 +76,18 @@ def main():
                         if abstract == -1:
                             print("Unable to locate abstract of this paper. Skipping this node.")
                         else:
-                            continue
+                            print("Analyzing...")
+                            correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                            scoreComputer(correlation, score, seed.doi, doi, tree)
                     else:
                         #do stuff here to check reproduction and propogate the score through associated areas
                         print("Analyzing...")
+                        correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                        scoreComputer(correlation, score, seed.doi, doi, tree)
                 except:
                     print("Not found in existing tree, skipping.")
+
+            
 
             #now, present the completed CitationTree, with nodes.
             #dump the tree too as well into a json file
@@ -108,3 +116,6 @@ def scoreComputer(corr, repScore, DOI1, DOI2, tree):
 
         # Add the score to the CitationNode's value
         tree.nodes[node]['data'].val = repScore / 5
+
+if __name__ == "__main__":
+    main()
