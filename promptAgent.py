@@ -85,28 +85,28 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
     # Extract the citations from PDF1
     citations_pdfA = parse_pdf_citations(pdfA_path)
 
-    # Extract the content of PDF2 for citation analysis
-    with open(pdfB_path, 'rb') as pdfB_file:
-        parser = PDFParser(pdfB_file)
-        document = PDFDocument(parser)
-        parser.set_document(document)
+    if indicator == False:
+        # Extract the content of PDF2 for citation analysis
+        with open(pdfB_path, 'rb') as pdfB_file:
+            parser = PDFParser(pdfB_file)
+            document = PDFDocument(parser)
+            parser.set_document(document)
 
-        rsrcmgr = PDFResourceManager()
-        device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
-        interpreter = PDFPageInterpreter(rsrcmgr, device)
+            rsrcmgr = PDFResourceManager()
+            device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
 
-        citations_found = []
-        for page in PDFPage.create_pages(document):
-            interpreter.process_page(page)
-            layout = device.get_result()
-            for element in layout:
-                if isinstance(element, LTTextBox) or isinstance(element, LTTextLine):
-                    text = element.get_text().strip()
-
-                    # Check if the text contains any citations from PDF1
-                    for citation in citations_pdfA:
-                        if f"[{citation}]" in text: #TODO : replace text with page
-                            citations_found.append((citation, text))
+            citations_found = []
+            for page in PDFPage.create_pages(document):
+                interpreter.process_page(page)
+                layout = device.get_result()
+                for element in layout:
+                    if isinstance(element, LTTextBox) or isinstance(element, LTTextLine):
+                        text = element.get_text().strip()
+                        # Check if the text contains any citations from PDF1
+                        for citation in citations_pdfA:
+                            if f"[{citation}]" in text: 
+                                citations_found.append((citation, page))
 
     # # Generate the citation tree
     # target_paper = createPaperFromDoi("target_paper_doi")  # Replace "target_paper_doi" with the actual DOI
@@ -121,14 +121,34 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
     #         continue
 
     # Analyze the paper or the abstract
-    if indicator == 1:
+    if indicator == True:
         # Send prompt to OpenAI API to check if PDF2 reproduces the results of PDF1
         prompt = f"""
-        The paper in PDF2 cites the paper in PDF1. Based on this information, does the paper in PDF2 reproduce the results of the paper in PDF1?
-        (based on this block of text)
-        Write the best prompt to and specify how to perfectly score the correlation between two papers.
-        PDF1 citations: {citations_pdfA}
-        PDF2 citations: {citations_found}
+
+        Reproducibility is a fundamental aspect of scientific research, ensuring that the results, findings, and methodologies
+        presented in a paper can be independently validated and verified. You need to act like a Research Engineer in the 
+        field of mechanical and aerospace engineering. Part of your role involves assessing the reproducibility of academic
+        papers and assess their effectiveness in addressing specific engineering challenges. 
+
+        You are given two PDFs, PDFA and PDFB. PDFA is the original paper, which is delimited by triple backticks. PDFB is a
+        paper that cites PDFA. You are given the relevant pages within PDFB that cite and utilize PDFA i.e. PDFB citations,
+        which is delimited by double backticks. Your task is to check if PDFB reproduces the results of PDFA.
+
+        To analyze the reproducibility of PDFA based on the citations and content in PDFB, follow these directions:
+        
+        1. Examine PDFB citations. Look for indications of whether PDFB attempted to reproduce the results 
+           of PDFA or if it simply cited PDFA as a reference without attempting reproduction.
+        2. If PDFB states or implies that it reproduced PDFA's results, carefully scrutinize the corresponding sections or 
+           code snippets in PDFB. Compare the reported results in PDFA with those in PDFB to verify if they align.
+        3. Note any discrepancies or differences in the reproduced results between PDFA and PDFB. If PDFB successfully 
+           reproduces PDFA's results, clearly state that the reproduction was successful. On the other hand, if PDFB produces 
+           results that directly contradict or deviate significantly from PDFA's results, explicitly mention the discrepancies
+           and highlight that PDFB's results do not align with PDFA's findings.
+        4. Provide a detailed analysis of the similarities or differences between PDFA and PDFB, specifically in terms of the
+           reproduced results. Explain any modifications, variations, or potential reasons for the discrepancies, if applicable.
+
+        PDFA: '''{pdfA_path}'''
+        PDFB citations: ''{citations_found}''
         """
         response = get_completion(prompt)
         print("Response from OpenAI API:")
@@ -137,7 +157,7 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
     else:
         # Use the abstract for prompt engineering
         prompt = f"""
-        Abstract of the paper with DOI {doi}:
+        Abstract of the paper with DOI {abstract}:
         {abstract}
         """
         response = get_completion(prompt)
@@ -145,36 +165,7 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
         print(response)
 
         
-    # # Process the response and give it a score
 
-    # # Add the score to the CitationNode's value
-    # # citation_tree.nodes[node]['data'].val = score
-    # # Iterate over the nodes in the citation tree
-    # for node in citation_tree.nodes:
-    #     doi = citation_tree.nodes[node]['data'].doi
-
-    #     # Skip the target paper itself
-    #     if doi == target_paper.doi:
-    #         continue
-
-    #     # Download or retrieve the paper based on DOI
-    #     paper = createPaperFromDoi(doi)
-
-    #     # Calculate the score for the paper
-    #     score = calculate_correlation_score(paper)
-
-    #     # Add the score to the CitationNode's value
-    #     citation_tree.nodes[node]['data'].val = score
-
-
-        # propagation formula of scores
-        # def calculate_correlation_score(citing_paper):
-            # for every two papers, calculate the correlation score
-            # reproduced paper gets positive score, non-reproduced paper gets negative score
-            # propagate: mutual citations get  -> 0.5 * score
-            return 0
-            # Generate the multicolored graph based on validation scores
-            # Use the citation_tree to plot the graph
 
 
 # Paths to the PDF files
@@ -183,3 +174,34 @@ pdfB_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfB.pdf"
 
 # Find citations in PDF2 and check if it reproduces the results of PDF1
 check_reproduction(pdfA_path, pdfB_path)
+
+
+        # Your main goal is to formulate a score to assess the correlation between two papers based on reproduction status and
+        # mutual citations. Here is the Scoring Formula:
+
+        #         Score(A, B) = ReproductionScore(A, B) + Σ(0.5 * InitialScore(A, B)) for all mutual citations
+
+        # ReproductionScore(A, B): Assign a positive value (e.g., +1) if Paper A successfully reproduces the results of Paper B.
+        # Otherwise, assign a negative value (e.g., -1).
+
+        # InitialScore(A, B): Start with an initial score of zero for each paper pair.
+
+        # Mutual citations: Identify instances where Paper A cites Paper B and vice versa.
+
+        # Propagation factor: Multiply the initial score by 0.5 to account for mutual support.
+
+        # Σ: Summation of the propagation factor multiplied by the initial score for all mutual citations.
+
+
+
+        
+        # Write the best prompt to and specify how to perfectly score the correlation between two papers. 
+
+
+
+
+
+
+
+
+
