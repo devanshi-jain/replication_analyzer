@@ -1,8 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import mplcursors
-from mpl_interactions import ioff, panhandler, zoom_factory
-
 
 # Create an empty directed graph
 graph = nx.DiGraph()
@@ -17,7 +15,7 @@ print(graph)
 
 # Draw the graph
 pos = nx.spring_layout(graph)  # Layout algorithm for node positioning
-nx.draw(graph, pos, with_labels=True, node_size=500, node_color='lightblue', edge_color='gray')
+nx.draw(graph, pos, with_labels=True, node_size=500, node_color='lightgreen', edge_color='gray')
 
 # arrow features
 cursor = mplcursors.cursor(hover=True)
