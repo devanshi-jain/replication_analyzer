@@ -5,12 +5,15 @@ from llama_index import (
     LLMPredictor,
     ServiceContext
 )
+
 from langchain.llms.openai import OpenAIChat
 from llama_index.indices.composability import ComposableGraph
 from llama_index.indices.query.query_transform.base import DecomposeQueryTransform
 from llama_index.query_engine.transform_query_engine import TransformQueryEngine
 import openai
 import os
+
+from langchain.chat_models import ChatOpenAI
 
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv()) #reads local .env file
@@ -20,8 +23,6 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # Set the API key for the OpenAI API client
 openai.api_key = openai_api_key
-
-print("OpenAI API key:", openai.api_key)
 
 def llamaAgent(pdfAPath, pdfBPath):
     pdfs = {}
