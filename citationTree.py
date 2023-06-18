@@ -70,7 +70,6 @@ class CitationTree:
                 layer1node = CitationNode(layer1paper)
                 self.graph.add_node(doi1, data=layer1node)
                 self.graph.add_edge(seed.doi, doi1, weight=4)
-                layer1list += layer1node
 
                 #special program to link across the first layer
                 for doi in layer1paper.sources:
