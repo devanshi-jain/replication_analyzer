@@ -7,19 +7,22 @@ class Paper:
         client = opencitingpy.client.Client()
         self.title = title
         self.doi = doi
-        print("Retrieving Citations...")
-        if self.cited_by == None:
+        #print("Retrieving Citations...")
+        if cited_by == None:
             self.cited_by = [x.citing[8:] for x in client.get_citations(doi)]
-        print("Retrieving Sources...")
-        if self.sources == None:
+        else:
+            self.cited_by = cited_by
+        #print("Retrieving Sources...")
+        if sources == None:
             self.sources = [x.cited[8:] for x in client.get_references(doi)]
-        if self.metadata == None:
-            self.metadata = client.get_metadata(doi)
-            if self.metadata != []:
-                self.author = self.metadata[0].author
+        else:
+            self.sources = sources
+        self.metadata = client.get_metadata(doi)
+        if self.metadata != []:
+            self.author = self.metadata[0].author
         self.clusters = clusters
         self.reproducibility = reproducibility
-        print("Init Success!")
+        #print("Init Success!")
 
     def add_citation(self, paper):
         self.cited_by.append(paper)
