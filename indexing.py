@@ -133,7 +133,7 @@ def check_reproduction(pdf1_path, pdf2_path):
         if paper != -1:
             analyze_paper(paper)  # Call your analysis function here
         else:
-            abstract = retrieve_abstract(doi)  # Implement the function to retrieve the abstract
+            abstract = retrieveAbstract(doi)  # Implement the function to retrieve the abstract
 
             # Use the abstract for prompt engineering
             prompt = f"""
