@@ -1,5 +1,7 @@
 import opencitingpy
+import os
 from paper_repository import Paper, PaperLite, PaperLessLite
+from scidownl import scihub_download
 
 def createPaperFromDoi(doi, client):
     metadata = client.get_metadata(doi)
@@ -26,5 +28,14 @@ def createPaperLessLiteFromDoi(doi, client):
     return PaperLessLite(title = metadata.title, doi = doi, publication_date = metadata.year, client = client, sources = sources)
 
 #outputs a return code: 0 if retrieved successfully, -1 if not retrieved (will be used to determine whether or not to use abstract)
-def retrievePaper(title):
+#if the paper is retrieved correctly, will be found at distinct place in cwd.
+def retrievePaper(doi):
+    proxies = {
+        'http': 'socks5://127.0.0.1:7890'
+    }
+    scihub_download("https://doi.org/" + doi, paper_type="doi", out = os.getcwd() + "pdfB", proxies=proxies)
+    return -1
+
+#retrieves the paper from drive... should work, no...since we're iterating from the drive lol? If it doesn't, returns -1 to throw an error.
+def retrievePaperFromDrive(title):
     return -1
