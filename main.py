@@ -78,11 +78,12 @@ def __main__():
 
     return 0
 
-def scoreComputer(corr, repScore, DOI1, DOI2):
+def scoreComputer(corr, repScore, DOI1, DOI2, tree):
     #send whatever input is required to the prompt engineer
     #Returns : correlation score[0,1] and reproducibility score [-1,1]
     corr, repScore = 0, 0
     score = corr * repScore
+    
     
     tree.graph.nodes[DOI1][0].val += score
     tree.graph.nodes[DOI2][0].val += score / 2
@@ -98,5 +99,5 @@ def scoreComputer(corr, repScore, DOI1, DOI2):
             continue
 
         # Add the score to the CitationNode's value
-        tree.nodes[node]['data'].val = score
+        tree.nodes[node]['data'].val = score/4
 
