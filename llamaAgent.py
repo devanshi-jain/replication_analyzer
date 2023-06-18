@@ -56,8 +56,8 @@ def llamaAgent(pdfAPath, pdfBPath):
         custom_query_engines[index.index_id] = tranformed_query_engine
 
     custom_query_engines[graph.root_index.index_id] = graph.root_index.as_query_engine(
-        retriever_mode='embedding', 
-        response_mode='accumulate', 
+        retriever_mode='default', 
+        response_mode='compact', 
         service_context=service_context
     )
 
@@ -65,7 +65,6 @@ def llamaAgent(pdfAPath, pdfBPath):
         custom_query_engines=custom_query_engines,
     )
 
-    
 
     prompt = f"""
         How correlated is Paper A with Paper B? You must respond with an integer between 0 to 10.
