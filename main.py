@@ -57,11 +57,13 @@ def main():
                         else:
                             print("Analyzing...")
                             correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                            print(correlation, score)
                             scoreComputer(correlation, score, seed.doi, doi, tree)
                     else:
                         #do stuff here to check reproduction and propogate the score through associated areas
                         print("Analyzing...")
                         correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                        print(correlation, score)
                         scoreComputer(correlation, score, seed.doi, doi, tree)
                 except:
                     print("Not found in existing tree, skipping.")
@@ -78,11 +80,13 @@ def main():
                         else:
                             print("Analyzing...")
                             correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                            print(correlation, score)
                             scoreComputer(correlation, score, seed.doi, doi, tree)
                     else:
                         #do stuff here to check reproduction and propogate the score through associated areas
                         print("Analyzing...")
                         correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
+                        print(correlation, score)
                         scoreComputer(correlation, score, seed.doi, doi, tree)
                 except:
                     print("Not found in existing tree, skipping.")

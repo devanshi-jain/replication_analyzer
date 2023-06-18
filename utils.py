@@ -156,7 +156,7 @@ def uploadFolderToDrive():
     print(f"Uploaded folder '{folder_name}' to Google Drive with ID: {drive_folder_id}")
 
 def randomGPTOutput():
-    corr, score = random.randint(0, 1), random.randint(-1, 1)		
+    corr, score = random.random(0, 1), random.random(-1, 1)
     return corr, score
 
 if __name__ == "__main__":
