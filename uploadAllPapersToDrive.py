@@ -43,7 +43,7 @@ def upload_folder_to_drive(folder_path, parent_folder_id):
         elif os.path.isdir(file_path):
             upload_folder_to_drive(file_path, parent_folder_id)
 
-    print(f"Uploaded folder '{folder_name}' to Google Drive with ID: {parent_folder}")
+    print(f"Uploaded folder '{folder_name}' to Google Drive with ID: {parent_folder_id}")
 
 # Start uploading the local folder
 upload_folder_to_drive(local_folder_path, drive_folder_id)

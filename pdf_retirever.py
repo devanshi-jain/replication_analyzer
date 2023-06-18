@@ -2,6 +2,7 @@ import json
 import pandas as pd
 from scidownl import scihub_download
 from paper_repository import Paper
+import os
 
 data= pd.read_csv("Stone, Howard A.csv")
 no_of_rows = data.shape[0]
@@ -15,7 +16,7 @@ for i in range(0, no_of_rows):
         title = data.iloc[i, 2]
         paper = "https://doi.org/" + DOI
         
-        out = "/Users/manan/Desktop/calhacks/PDFs/" + title
+        out = os.getcwd() + "/downloadedPapers" + doi
         paper_type = "doi"
 
         proxies = {
