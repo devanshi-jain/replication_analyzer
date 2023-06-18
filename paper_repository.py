@@ -2,9 +2,9 @@ import opencitingpy
 import json
 
 class Paper:
-    def __init__(self, title, doi, cited_by=None, sources=None, clusters=[], reproducibility=0,
-                 publication_date=None, author = None):
-        client = opencitingpy.client.Client()
+    def __init__(self, title, doi, cited_by=None, sources=None, publication_date=None, author = None, client = None):
+        if client == None:
+            client = opencitingpy.client.Client()
         self.title = title
         self.doi = doi
         #print("Retrieving Citations...")
@@ -20,9 +20,6 @@ class Paper:
         self.metadata = client.get_metadata(doi)
         if self.metadata != []:
             self.author = self.metadata[0].author
-        self.clusters = clusters
-        self.reproducibility = reproducibility
-        #print("Init Success!")
 
     def add_citation(self, paper):
         self.cited_by.append(paper)
@@ -39,6 +36,55 @@ class Paper:
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
+class PaperLite:
+    def __init__(self, title, doi,  publication_date=None, author = None, client = None):
+        if client == None:
+            client = opencitingpy.client.Client()
+        self.metadata = client.get_metadata(doi)
+        if self.metadata != []:
+            self.author = self.metadata[0].author
+        self.title = title
+        self.doi = doi
+
+    def add_to_cluster(self, cluster):
+        self.clusters.append(cluster)
+
+    def set_reproducibility_cluster(self, cluster):
+        self.reproducibility_cluster = cluster
+
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+    
+class PaperLessLite:
+    def __init__(self, title, doi, sources=None, reproducibility=0,
+                 publication_date=None, author = None, client = None):
+        if client == None:
+            client = opencitingpy.client.Client()
+        client = opencitingpy.client.Client()
+        self.title = title
+        self.doi = doi
+        if sources == None:
+            self.sources = [x.cited[8:] for x in client.get_references(doi)]
+        else:
+            self.sources = sources
+        self.metadata = client.get_metadata(doi)
+        if self.metadata != []:
+            self.author = self.metadata[0].author
+
+    def add_citation(self, paper):
+        self.cited_by.append(paper)
+
+    def add_source(self, paper):
+        self.sources.append(paper)
+
+    def add_to_cluster(self, cluster):
+        self.clusters.append(cluster)
+
+    def set_reproducibility_cluster(self, cluster):
+        self.reproducibility_cluster = cluster
+
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 # class ResearchPaperRepository:
 #     def __init__(self):
