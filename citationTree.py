@@ -4,7 +4,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import opencitingpy
 import mplcursors
-import json
+import numpy as np
+import math
 
 class CitationNode:
     def __init__(self, paper):
@@ -21,16 +22,12 @@ class CitationNode:
 
     def retrieveVal(self):
         return self.val
-    
-    def toJson(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
 
 class CitationTree:
     def __init__(self, paper):
         self.graph = nx.DiGraph()
         client = opencitingpy.client.Client()
         self.generateFromPaper(paper, client)
-        self.root = None
     
 
     #method: generate individual DOI nodes, including their CitationNodes, with directed graph relationships.
@@ -43,12 +40,11 @@ class CitationTree:
 
         seed = CitationNode(paper)
         self.graph.add_node(seed.doi, data=seed)
-        self.root = seed
 
         #expand the seed toward the citeby
         #now, expand the seed toward the sources
         neglist = []
-        maxlen = min(5, len(paper.sources)) #creating artificial cap for computation reasons
+        maxlen = min(1, len(paper.sources)) #creating artificial cap for computation reasons
         for doisub1 in paper.sources[:maxlen]:
             print("Layer -1 Retrieval")
             layersub1paper = createPaperLiteFromDoi(doisub1, client)
@@ -67,7 +63,7 @@ class CitationTree:
                 #         self.graph.add_edge(doisub1, doi0, weight=4)
 
         
-        maxlen = min(5, len(paper.cited_by)) #creating artificial cap for computation reasons
+        maxlen = min(1, len(paper.cited_by)) #creating artificial cap for computation reasons
         for doi1 in paper.cited_by[:maxlen]:
             #first, create a directed entry back toward the seed node.
             print("Layer 1 Retrieval")
@@ -97,22 +93,38 @@ class CitationTree:
     def retrieveGraph(self):
         return self.graph
     
-    def toJson(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-    
 if __name__ == "__main__":
     client = opencitingpy.client.Client()
     test = createPaperFromDoi("10.1186/1756-8722-6-59", client)
     tree = CitationTree(test).retrieveGraph()
     print(tree)
-    pos = nx.spring_layout(tree) 
+
+    # update labels
+    for node_name, node_attr in tree.nodes.items():
+        # print(node_attr)
+        node_pi = node_attr["data"].author[0] 
+        print(node_pi)
+
+        # Modify the node_title variable or use a different variable for the desired label
+        tree.nodes[node_name]["label"] = node_pi 
+    # print(tree.nodes.items())
+    # print(tree.nodes.items()["label"])
+    pos = nx.spring_layout(tree, k=5/math.sqrt(tree.order())) 
     nodes = nx.draw(tree, pos, with_labels=True, node_size=500, node_color='lightgreen', edge_color='gray')
-    # arrow features
+    
+    # arrow + display features
     def update_annot(sel):
         node_index = sel.target.index
+        #number index
         node_name = list(tree.nodes)[node_index]
         node_attr = tree.nodes[node_name]
-        text = node_name + ' is the name'
+        node_title = node_attr["data"].title
+        node_author = node_attr["data"].author
+        node_doi = node_attr["data"].doi
+        node_pi =node_author[0] 
+        node_val = node_attr["data"].val
+
+        text = node_title + "\n" + node_doi 
         sel.annotation.set_text(text)
         sel.annotation.get_bbox_patch().set(fc="white")
 
@@ -122,4 +134,3 @@ if __name__ == "__main__":
     #zoom feature
     # Press move feature on graph + CTRL button
     plt.show()
-
