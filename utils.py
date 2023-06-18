@@ -33,8 +33,11 @@ def retrievePaper(doi):
     proxies = {
         'http': 'socks5://127.0.0.1:7890'
     }
-    scihub_download("https://doi.org/" + doi, paper_type="doi", out = os.getcwd() + "pdfB", proxies=proxies)
-    return -1
+    try:
+        scihub_download("https://doi.org/" + doi, paper_type="doi", out = os.getcwd() + "pdfB", proxies=proxies)
+    except:
+        return -1
+    return 0
 
 #retrieves the paper from drive... should work, no...since we're iterating from the drive lol? If it doesn't, returns -1 to throw an error.
 def retrievePaperFromDrive(title):
