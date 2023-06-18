@@ -10,6 +10,7 @@ import math
 class CitationNode:
     def __init__(self, paper):
         self.title = paper.title
+        self.paper = paper
         self.author = paper.author
         self.doi = paper.doi
         self.val = 0
@@ -27,8 +28,8 @@ class CitationTree:
     def __init__(self, paper):
         self.graph = nx.DiGraph()
         client = opencitingpy.client.Client()
+        self.root = None
         self.generateFromPaper(paper, client)
-    
 
     #method: generate individual DOI nodes, including their CitationNodes, with directed graph relationships.
         #doi(number/letter) indicates the level of the paper relative to others in terms of degree relationship. 
@@ -40,6 +41,7 @@ class CitationTree:
 
         seed = CitationNode(paper)
         self.graph.add_node(seed.doi, data=seed)
+        self.root = seed
 
         #expand the seed toward the citeby
         #now, expand the seed toward the sources
