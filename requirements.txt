@@ -9,4 +9,5 @@ pdfminer
 llama-index
 pypdf
 pydantic == 1.10.8
+nltk
 
