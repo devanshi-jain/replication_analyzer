@@ -3,3 +3,5 @@ scidownl
 opencitingpy
 google-api-python-client
 networkx
+metapub
+mplcursors
