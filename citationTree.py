@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import opencitingpy
 import mplcursors
 import numpy as np
+import random
 
 class CitationNode:
     def __init__(self, paper):
@@ -124,14 +125,14 @@ if __name__ == "__main__":
         node_pi = node_attr["data"].author[0].split(',')[0]
         labeling[node_name] = node_pi
         node_val = node_attr["data"].val
-        # node_val = node_attr["data"].xtier
+        node_val = random.randint(-100, 100)
         print(node_val)
         color = "#D3D3D3"
 
         if node_val < 0: 
-            color = rgb_to_hex(200, 0, 0)
+            color = rgb_to_hex(int(-node_val*2.5), 0, 0)
         elif node_val > 0: 
-            color = rgb_to_hex(0, 200, 0)
+            color = rgb_to_hex(0, int(node_val*2.5), 0)
         colors.append(color)
         print(colors)
 
