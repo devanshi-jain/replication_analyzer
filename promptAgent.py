@@ -147,6 +147,9 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
         4. Provide a detailed analysis of the similarities or differences between PDFA and PDFB, specifically in terms of the
            reproduced results. Explain any modifications, variations, or potential reasons for the discrepancies, if applicable.
 
+        Based on this assement, give it a score between 0 and 10, where 0 indicates that PDFB does not reproduce PDFA's results
+        at all, and 10 indicates that PDFB reproduces PDFA's results perfectly.
+
         PDFA: '''{pdfA_path}'''
         PDFB citations: ''{citations_found}''
         """
@@ -157,14 +160,41 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
     else:
         # Use the abstract for prompt engineering
         prompt = f"""
+        Reproducibility is a fundamental aspect of scientific research, ensuring that the results, findings, and methodologies
+        presented in a paper can be independently validated and verified. As a Research Engineer in the field of mechanical and
+        aerospace engineering, part of your role is to assess the reproducibility of academic papers and evaluate their effectiveness
+        in addressing specific engineering challenges.
+
+        You are given two papers, PDFA and PDFB. PDFA is the original paper, and PDFB is a paper that cites PDFA. However, the PDFs
+        are not available for analysis, and only the abstracts are provided. Your task is to assess the reproducibility of PDFA
+        based on the citations and the abstracts of PDFB. Note that the absence of the full PDF content may limit the accuracy of
+        the reproducibility analysis.
+
+        To analyze the reproducibility of PDFA based on the citations and content in PDFB, follow these directions:
+
+        1. Examine the citations in PDFB. Look for indications of whether PDFB attempted to reproduce the results of PDFA or if it
+        simply cited PDFA as a reference without attempting reproduction.
+
+        2. If PDFB states or implies that it reproduced PDFA's results, carefully scrutinize the corresponding sections or code
+        snippets in PDFB. Compare the reported results in PDFA with those in PDFB to verify if they align.
+
+        3. Note any discrepancies or differences in the reproduced results between PDFA and PDFB. If PDFB indicates successful
+        reproduction of PDFA's results, clearly state that the reproduction was successful. On the other hand, if PDFB produces
+        results that directly contradict or deviate significantly from PDFA's results, explicitly mention the discrepancies and
+        highlight that PDFB's results do not align with PDFA's findings.
+
+        4. Provide a detailed analysis of the similarities or differences between PDFA and PDFB based on their abstracts. Explain
+        any modifications, variations, or potential reasons for the discrepancies, considering the limitations of abstract-based
+        comparison.
+
+        Please note that the absence of the full PDF content may limit the accuracy of the reproducibility assessment. 
+
         Abstract of the paper with DOI {abstract}:
         {abstract}
         """
         response = get_completion(prompt)
         print("Response from OpenAI API:")
         print(response)
-
-        
 
 
 
