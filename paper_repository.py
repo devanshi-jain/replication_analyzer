@@ -1,4 +1,5 @@
 import opencitingpy
+import json
 
 class Paper:
     def __init__(self, title, doi, cited_by=None, sources=None, clusters=[], reproducibility=0,
@@ -26,6 +27,9 @@ class Paper:
 
     def set_reproducibility_cluster(self, cluster):
         self.reproducibility_cluster = cluster
+
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 
 # class ResearchPaperRepository:
