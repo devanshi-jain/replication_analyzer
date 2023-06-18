@@ -91,22 +91,19 @@ def main():
                 except:
                     print("Not found in existing tree, skipping.")
 
-            
-
             #now, present the completed CitationTree, with nodes.
             #dump the tree too as well into a json file
 
     return 0
 
-def scoreComputer(corr, repScore, DOI1, DOI2, tree):
+def scoreComputer(corr, repScore, doi1, doi2, tree):
     #send whatever input is required to the prompt engineer
     #Returns : correlation score[0,1] and reproducibility score [-1,1]
-    corr, repScore = 0, 0
     score = corr * repScore
     
     
-    tree.graph.nodes[DOI1]['data'].val += score
-    tree.graph.nodes[DOI2]['data'].val += score / 2
+    tree.graph.nodes[doi1]['data'].val += score
+    tree.graph.nodes[doi2]['data'].val += score / 2
     
     # Add the score to the CitationNode's value
     # citation_tree.nodes[node]['data'].val = score
@@ -115,12 +112,12 @@ def scoreComputer(corr, repScore, DOI1, DOI2, tree):
         doi = tree.graph.nodes[node]['data'].doi
 
         # Skip the target paper itself
-        if doi == DOI1 or doi == DOI2:
+        if doi == doi1 or doi == doi2:
             continue
 
         # Add the score to the CitationNode's value
-        tree.nodes[node]['data'].val = repScore / 5
-    print("Score for ", DOI1, tree.graph.nodes[DOI1]['data'].val)
+        tree.graph.nodes[node]['data'].val = repScore / 5
+    print("Score for ", doi1, tree.graph.nodes[doi1]['data'].val)
 
 if __name__ == "__main__":
     main()
