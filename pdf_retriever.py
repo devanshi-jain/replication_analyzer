@@ -13,15 +13,18 @@ for i in range(0, no_of_rows):
     try:
         doi = data.iloc[i, 12]
         title = data.iloc[i, 2]
+        year = data.iloc[i,3]
         paper = "https://doi.org/" + doi
-        out = os.getcwd() + "/downloadedPapers/" + doi
+        out = os.getcwd() + "/downloadedPapers/" + title
         paper_type = "doi"
         proxies = {
             'http': 'socks5://127.0.0.1:7890'
         }
         scihub_download(paper, paper_type=paper_type, out=out, proxies=proxies)
-        dl_paper = Paper(title = title, doi = doi)
-        print(json.dumps(dl_paper.toJson()))
+        print(1)
+        dl_paper = Paper(title = title, doi = doi, publication_date = year)
+        print(2)
+        print(json.dumps(dl_paper.toJson(), indent=4))
 
         with open(file_path, "a") as file:
             file.write(json.dumps(dl_paper) + ",")
