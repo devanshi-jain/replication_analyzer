@@ -199,11 +199,11 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
 
 
 # Paths to the PDF files
-pdfA_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfA.pdf"
-pdfB_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfB.pdf"
+# pdfA_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfA.pdf"
+# pdfB_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfB.pdf"
 
 # Find citations in PDF2 and check if it reproduces the results of PDF1
-check_reproduction(pdfA_path, pdfB_path)
+# check_reproduction(pdfA_path, pdfB_path)
 
 
         # Your main goal is to formulate a score to assess the correlation between two papers based on reproduction status and
