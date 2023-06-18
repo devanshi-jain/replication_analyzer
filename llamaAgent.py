@@ -27,6 +27,7 @@ _ = load_dotenv(find_dotenv()) #reads local .env file
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # Set the API key for the OpenAI API client
+
 openai.api_key = openai_api_key
 
 def llamaAgent(pdfAPath, pdfBPath):
@@ -117,6 +118,13 @@ def llamaAgent(pdfAPath, pdfBPath):
     # print(response)
 
     return 0
+
+
+# Data: Does the second paper get the same results using the first paper's data?
+# Method: Does the second paper use the same methods as the first?
+# Outcome: Are the results of both papers similar?
+# Verification: Can others confirm the second paper's results?
+# Relevance: Is the second paper's work closely related to the first's?
 
 if __name__ == "__main__":
     llamaAgent("./pdfA.pdf", "./pdfB.pdf")
