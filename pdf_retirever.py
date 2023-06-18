@@ -1,29 +1,30 @@
-
+import json
 import pandas as pd
 from scidownl import scihub_download
+from paper_repository import Paper
 
 data= pd.read_csv("Stone, Howard A.csv")
 no_of_rows = data.shape[0]
 
-from paper_repository import Paper
+file_path = "paperdata.json"
 
 for i in range(0, no_of_rows): 
 
     try:
-        DOI = data.iloc[i, 12]
-        TITLE = data.iloc[i, 2]
+        doi = data.iloc[i, 12]
+        title = data.iloc[i, 2]
         paper = "https://doi.org/" + DOI
         
-        out = "/Users/manan/Desktop/calhacks/PDFs/" + TITLE
+        out = "/Users/manan/Desktop/calhacks/PDFs/" + title
         paper_type = "doi"
 
         proxies = {
             'http': 'socks5://127.0.0.1:7890'
         }
         scihub_download(paper, paper_type=paper_type, out=out, proxies=proxies)
-        dl_paper = Paper(title = TITLE, doi = DOI)
-        
-         
+        dl_paper = Paper(title = title, doi = doi)
+        with open(file_path, "a") as file:
+            file.write(json.dumps(dl_paper) + ",")
 
     except:
         continue
