@@ -1,7 +1,5 @@
 # **Poisoned Ivies: The First GPT Method to Determine Reproducibility of Princeton's Scientific Papers**
 
-![Poison Ivies Logo](logo.png)
-
 
 ## **Inspiration**
 
