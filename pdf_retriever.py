@@ -4,7 +4,7 @@ from scidownl import scihub_download
 from paper_repository import Paper
 import os
 
-data= pd.read_csv("Stone, Howard A.csv")
+data= pd.read_csv("Ju, Yiguang.csv")
 no_of_rows = data.shape[0]
 
 file_path = "paperdata.json"
