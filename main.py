@@ -85,8 +85,8 @@ def scoreComputer(corr, repScore, DOI1, DOI2, tree):
     score = corr * repScore
     
     
-    tree.graph.nodes[DOI1][0].val += score
-    tree.graph.nodes[DOI2][0].val += score / 2
+    tree.graph.nodes[DOI1]['data'].val += score
+    tree.graph.nodes[DOI2]['data'].val += score / 2
     
     # Add the score to the CitationNode's value
     # citation_tree.nodes[node]['data'].val = score
@@ -99,5 +99,5 @@ def scoreComputer(corr, repScore, DOI1, DOI2, tree):
             continue
 
         # Add the score to the CitationNode's value
-        tree.nodes[node]['data'].val = score/4
+        tree.nodes[node]['data'].val = repScore / 5
 
