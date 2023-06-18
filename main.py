@@ -116,6 +116,7 @@ def scoreComputer(corr, repScore, DOI1, DOI2, tree):
 
         # Add the score to the CitationNode's value
         tree.nodes[node]['data'].val = repScore / 5
+    print("Score for ", DOI1, tree.graph.nodes[DOI1]['data'].val)
 
 if __name__ == "__main__":
     main()
