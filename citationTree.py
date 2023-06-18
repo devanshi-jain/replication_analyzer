@@ -126,7 +126,7 @@ if __name__ == "__main__":
         labeling[node_name] = node_pi
         node_val = node_attr["data"].val
         #delete this test
-        node_val = random.randint(-100, 100)
+        # node_val = random.randint(-100, 100)
         print(node_val)
         color = "#D3D3D3"
 
