@@ -4,7 +4,7 @@
       {
         "label": "Run Python Script",
         "type": "shell",
-        "command": "python3 indexing.py",
+        "command": "python3 utils.py",
         "group": {
           "kind": "build",
           "isDefault": true

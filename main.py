@@ -4,7 +4,7 @@ import json
 import opencitingpy
 from paper_repository import Paper
 from citationTree import CitationTree, CitationNode
-from indexing import check_reproduction
+from promptAgent import check_reproduction
 
 def __main__():
     
