@@ -55,6 +55,8 @@ def __main__():
                 else:
                     #do stuff here to check reproduction and propogate the score through associated areas
                     print("Analyzing...")
+                    scoreComputer()
+
 
             for doi in seed.retrieveSources:
                 #first, try to retrieve the paper itself.
@@ -72,3 +74,11 @@ def __main__():
             #dump the tree too as well into a json file
 
     return 0
+
+def scoreComputer():
+    #send whatever input is required to the prompt engineer
+    #Returns : correlation score[0,1] and reproducibility score [-1,1]
+    corr, repScore = 0, 0
+    seed.value = 1
+    tree.graph.no
+    G.nodes[0].val += correlation * 1
