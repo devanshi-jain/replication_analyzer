@@ -6,10 +6,13 @@ class Paper:
         client = opencitingpy.client.Client()
         self.title = title
         self.doi = doi
+        print("Retrieving Citations...")
         self.cited_by = client.get_citations(doi)
+        print("Retrieving Sources...")
         self.sources = client.get_references(doi)
         self.clusters = clusters
         self.reproducibility = reproducibility
+        print("Retrieving Metadata...")
         self.publication_date = client.get_metadata(doi)[1] #retrieve the year
 
     def add_citation(self, paper):
