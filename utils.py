@@ -34,7 +34,7 @@ def retrievePaper(doi):
         'http': 'socks5://127.0.0.1:7890'
     }
     try:
-        scihub_download("https://doi.org/" + doi, paper_type="doi", out = os.getcwd() + "pdfB", proxies=proxies)
+        scihub_download("https://doi.org/" + doi, paper_type="doi", out = os.getcwd() + "pdfB.pdf", proxies=proxies)
     except:
         return -1
     return 0
