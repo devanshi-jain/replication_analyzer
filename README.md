@@ -1,5 +1,10 @@
 # **Poisoned Ivies: The First GPT Method to Determine Reproducibility of Princeton's Scientific Papers**
 
+<p float="left">
+  <img src="logo.png" width="100" />
+  <h1>Poisoned Ivies: The First GPT Method to Determine Reproducibility of Princeton's Scientific Papers</h1>
+</p>
+
 ## **Inspiration**
 
 In an era where the "**publish or perish**" mentality reigns, the issue of reproducibility in scientific research has become prominent. In 2016, a survey by Nature highlighted a jarring fact: **70%** of scientists failed to reproduce their peers' experiments. The paradox is most prominent among physicists and engineers, who seem the most confident yet are often associated with high-profile cases of irreproducibility.
