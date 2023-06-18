@@ -100,17 +100,14 @@ if __name__ == "__main__":
     print(tree)
 
     # update labels
+    labeling = {}
     for node_name, node_attr in tree.nodes.items():
-        # print(node_attr)
-        node_pi = node_attr["data"].author[0] 
-        print(node_pi)
+        # PI last name as label
+        node_pi = node_attr["data"].author[0].split(',')[0]
+        labeling[node_name] = node_pi
 
-        # Modify the node_title variable or use a different variable for the desired label
-        tree.nodes[node_name]["label"] = node_pi 
-    # print(tree.nodes.items())
-    # print(tree.nodes.items()["label"])
     pos = nx.spring_layout(tree, k=5/math.sqrt(tree.order())) 
-    nodes = nx.draw(tree, pos, with_labels=True, node_size=500, node_color='lightgreen', edge_color='gray')
+    nodes = nx.draw(tree, pos, with_labels = True, labels = labeling, node_size=500, node_color='lightgreen', edge_color='gray')
     
     # arrow + display features
     def update_annot(sel):
