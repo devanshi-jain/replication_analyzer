@@ -65,7 +65,6 @@ def llamaAgent(pdfAPath, pdfBPath):
         custom_query_engines=custom_query_engines,
     )
 
-
     prompt = f"""
         How correlated is Paper A with Paper B? You must respond with an integer between 0 to 10.
         """
