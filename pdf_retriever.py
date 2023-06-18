@@ -21,7 +21,7 @@ for i in range(0, no_of_rows):
             'http': 'socks5://127.0.0.1:7890'
         }
         scihub_download(paper, paper_type=paper_type, out=out, proxies=proxies)
-        if os.path.isfile(os.getcwd() + "/downloadedPapers/" + title):
+        if os.path.isfile(out):
             dl_paper = Paper(title = title, doi = doi, publication_date = year)
             print(json.dumps(dl_paper.toJson(), indent=4))
 
