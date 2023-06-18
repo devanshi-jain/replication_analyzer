@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import opencitingpy
 import mplcursors
 import numpy as np
-import math
 
 class CitationNode:
     def __init__(self, paper):
@@ -111,16 +110,32 @@ if __name__ == "__main__":
     tree = CitationTree(test).retrieveGraph()
     print(tree)
 
+    def rgb_to_hex(red, green, blue):
+        color_hex = "#{:02x}{:02x}{:02x}".format(red, green, blue)
+        return color_hex
+
     # update labels
     labeling = {}
     pos = {}
+    colors = []
     for node_name, node_attr in tree.nodes.items():
         # PI last name as label
         pos[node_name]=(node_attr["data"].xtier, node_attr["data"].tier)
         node_pi = node_attr["data"].author[0].split(',')[0]
         labeling[node_name] = node_pi
+        node_val = node_attr["data"].val
+        # node_val = node_attr["data"].xtier
+        print(node_val)
+        color = "#D3D3D3"
 
-    nodes = nx.draw(tree, pos, with_labels = True, labels = labeling, node_size=500, node_color='lightgreen', edge_color='gray')
+        if node_val < 0: 
+            color = rgb_to_hex(200, 0, 0)
+        elif node_val > 0: 
+            color = rgb_to_hex(0, 200, 0)
+        colors.append(color)
+        print(colors)
+
+    nodes = nx.draw(tree, pos, with_labels = True, labels = labeling, node_size=800, font_size = 7, node_color=colors, edge_color='gray')
     
     # arrow + display features
     def update_annot(sel):

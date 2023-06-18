@@ -56,14 +56,14 @@ def main():
                             print("Unable to locate abstract of this paper. Skipping this node.")
                         else:
                             print("Analyzing...")
-                            #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=True, abstract=abstract))
+                            #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=False, abstract=abstract))
                             correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
                             print(correlation, score)
                             scoreComputer(correlation, score, seed.doi, doi, tree)
                     else:
                         #do stuff here to check reproduction and propogate the score through associated areas
                         print("Analyzing...")
-                        #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=False))
+                        #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=True))
                         correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
                         print(correlation, score)
                         scoreComputer(correlation, score, seed.doi, doi, tree)
@@ -81,14 +81,14 @@ def main():
                             print("Unable to locate abstract of this paper. Skipping this node.")
                         else:
                             print("Analyzing...")
-                            #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=True, abstract = abstract))
+                            #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=False, abstract = abstract))
                             correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
                             print(correlation, score)
                             scoreComputer(correlation, score, seed.doi, doi, tree)
                     else:
                         #do stuff here to check reproduction and propogate the score through associated areas
                         print("Analyzing...")
-                        #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=False))
+                        #print(check_reproduction(pdfA_path = "pdfA.pdf", pdfB_path = "pdfB.pdf", indicator=True))
                         correlation, score = randomGPTOutput() #TODO: replace later with the real GPT func!!!
                         print(correlation, score)
                         scoreComputer(correlation, score, seed.doi, doi, tree)
