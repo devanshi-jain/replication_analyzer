@@ -2,3 +2,4 @@ pybtex
 scidownl
 opencitingpy
 google-api-python-client
+networkx

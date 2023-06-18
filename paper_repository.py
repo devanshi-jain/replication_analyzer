@@ -3,19 +3,18 @@ import json
 
 class Paper:
     def __init__(self, title, doi, cited_by=None, sources=None, clusters=[], reproducibility=0,
-                 publication_date=None):
+                 publication_date=None, author = None):
         client = opencitingpy.client.Client()
         self.title = title
         self.doi = doi
         print("Retrieving Citations...")
-        self.cited_by = client.get_citations(doi)
+        if self.cited_by == None:
+            self.cited_by = [x.citing[8:] for x in client.get_citations(doi)]
         print("Retrieving Sources...")
-        self.sources = client.get_references(doi)
+        if self.sources == None:
+            self.sources = [x.cited[8:] for x in client.get_references(doi)]
         self.clusters = clusters
         self.reproducibility = reproducibility
-        print("Retrieving Metadata...")
-        print(client.get_metadata(doi), self.cited_by, self.sources)
-        #self.publication_date = client.get_metadata(doi)[1] #retrieve the year
         print("Init Success!")
 
     def add_citation(self, paper):
