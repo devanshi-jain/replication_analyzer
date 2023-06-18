@@ -7,7 +7,7 @@ import os
 data= pd.read_csv("Ju, Yiguang.csv")
 no_of_rows = data.shape[0]
 
-file_path = os.getcwd() + "paperdata.json"
+file_path = os.getcwd() + "/paperdata.json"
 for i in range(0, no_of_rows): 
 
     try:
@@ -27,7 +27,7 @@ for i in range(0, no_of_rows):
         print(json.dumps(dl_paper.toJson(), indent=4))
 
         with open(file_path, "a") as file:
-            file.write(json.dumps(dl_paper) + ",")
+            file.write(json.dumps(dl_paper.toJson(), indent=4) + "\n")
 
     except:
         continue
