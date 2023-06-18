@@ -4,7 +4,7 @@ import json
 import opencitingpy
 from paper_repository import Paper
 from citationTree import CitationTree, CitationNode
-from indexing import check_reproduction
+from promptAgent import check_reproduction
 
 def __main__():
     
@@ -44,23 +44,28 @@ def __main__():
             #first, we obtain the tree elements we want to compare.
 
             seed = tree.root
-            for doi in seed.retrieveCitedBy:
+            for doi in seed.retrieveCitedBy():
                 #first, try to retrieve the paper itself.
                 if retrievePaper(doi) == -1:
                     print("Unable to find open-source version of this paper, attempting to retrieve abstract.")
-                    if retrieveAbstract(doi) == -1:
+                    abstract = retrieveAbstract(doi)
+                    if abstract == -1:
                         print("Unable to locate abstract of this paper. Skipping this node.")
                     else:
                         continue
+                        promptAgent.check_repoduction(gfagawwabnfwafnwafat, True, abstract)
+
                 else:
                     #do stuff here to check reproduction and propogate the score through associated areas
                     print("Analyzing...")
+                    correlation, score = promptAgent.check_repoduction(gfagawwabnfwafnwafat, True)
 
-            for doi in seed.retrieveSources:
+            for doi in seed.retrieveSources():
                 #first, try to retrieve the paper itself.
                 if retrievePaper(doi) == -1:
                     print("Unable to find open-source version of this paper, attempting to retrieve abstract.")
-                    if retrieveAbstract(doi) == -1:
+                    abstract = retrieveAbstract(doi)
+                    if abstract == -1:
                         print("Unable to locate abstract of this paper. Skipping this node.")
                     else:
                         continue
