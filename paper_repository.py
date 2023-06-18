@@ -14,7 +14,9 @@ class Paper:
         self.clusters = clusters
         self.reproducibility = reproducibility
         print("Retrieving Metadata...")
-        self.publication_date = client.get_metadata(doi)[1] #retrieve the year
+        print(client.get_metadata(doi), self.cited_by, self.sources)
+        #self.publication_date = client.get_metadata(doi)[1] #retrieve the year
+        print("Init Success!")
 
     def add_citation(self, paper):
         self.cited_by.append(paper)
