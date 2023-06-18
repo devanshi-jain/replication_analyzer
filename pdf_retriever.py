@@ -21,6 +21,7 @@ for i in range(0, no_of_rows):
         }
         scihub_download(paper, paper_type=paper_type, out=out, proxies=proxies)
         dl_paper = Paper(title = title, doi = doi)
+        
         with open(file_path, "a") as file:
             file.write(json.dumps(dl_paper) + ",")
 
