@@ -13,6 +13,8 @@ class CitationNode:
         self.author = paper.author
         self.doi = paper.doi
         self.val = 0
+        self.tier = 0
+        self.xtier=0
     
     def retrieveCitedBy(self):
         return self.cited_by
@@ -44,13 +46,18 @@ class CitationTree:
         #expand the seed toward the citeby
         #now, expand the seed toward the sources
         neglist = []
-        maxlen = min(1, len(paper.sources)) #creating artificial cap for computation reasons
+        cap = 5
+        maxlen = min(cap, len(paper.sources)) #creating artificial cap for computation reasons
+        xpos=-((cap - 1) / 2)
         for doisub1 in paper.sources[:maxlen]:
             print("Layer -1 Retrieval")
             layersub1paper = createPaperLiteFromDoi(doisub1, client)
             if layersub1paper != -1:
                 # print("Layer 0 Retrieval")
                 layersub1node = CitationNode(layersub1paper)
+                layersub1node.tier = -1
+                layersub1node.xtier = xpos
+                xpos+=1
                 self.graph.add_node(doisub1, data=layersub1node)
                 self.graph.add_edge(doisub1, seed.doi, weight=4)
                 neglist.append(doisub1)
@@ -62,8 +69,8 @@ class CitationTree:
                 #         self.graph.add_node(doi0, data=layer0node)
                 #         self.graph.add_edge(doisub1, doi0, weight=4)
 
-        
-        maxlen = min(1, len(paper.cited_by)) #creating artificial cap for computation reasons
+        maxlen = min(cap, len(paper.cited_by)) #creating artificial cap for computation reasons
+        xpos = -((cap - 1) / 2)
         for doi1 in paper.cited_by[:maxlen]:
             #first, create a directed entry back toward the seed node.
             print("Layer 1 Retrieval")
@@ -71,6 +78,9 @@ class CitationTree:
             if layer1paper != -1:
                 # print("Layer 2 Retrieval")
                 layer1node = CitationNode(layer1paper)
+                layer1node.tier = 1
+                layer1node.xtier = xpos
+                xpos+=1
                 self.graph.add_node(doi1, data=layer1node)
                 self.graph.add_edge(seed.doi, doi1, weight=4)
 
@@ -101,12 +111,13 @@ if __name__ == "__main__":
 
     # update labels
     labeling = {}
+    pos = {}
     for node_name, node_attr in tree.nodes.items():
         # PI last name as label
+        pos[node_name]=(node_attr["data"].xtier, node_attr["data"].tier)
         node_pi = node_attr["data"].author[0].split(',')[0]
         labeling[node_name] = node_pi
 
-    pos = nx.spring_layout(tree, k=5/math.sqrt(tree.order())) 
     nodes = nx.draw(tree, pos, with_labels = True, labels = labeling, node_size=500, node_color='lightgreen', edge_color='gray')
     
     # arrow + display features
