@@ -20,6 +20,7 @@ class Paper:
         self.metadata = client.get_metadata(doi)
         if self.metadata != []:
             self.author = self.metadata[0].author
+            self.publication_date = self.metadata[0].year
 
     def add_citation(self, paper):
         self.cited_by.append(paper)

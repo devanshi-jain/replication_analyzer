@@ -4,6 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import opencitingpy
 import mplcursors
+import json
 
 class CitationNode:
     def __init__(self, paper):
@@ -20,12 +21,16 @@ class CitationNode:
 
     def retrieveVal(self):
         return self.val
+    
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 class CitationTree:
     def __init__(self, paper):
         self.graph = nx.DiGraph()
         client = opencitingpy.client.Client()
         self.generateFromPaper(paper, client)
+        self.root = None
     
 
     #method: generate individual DOI nodes, including their CitationNodes, with directed graph relationships.
@@ -38,6 +43,7 @@ class CitationTree:
 
         seed = CitationNode(paper)
         self.graph.add_node(seed.doi, data=seed)
+        self.root = seed
 
         #expand the seed toward the citeby
         #now, expand the seed toward the sources
@@ -90,6 +96,9 @@ class CitationTree:
     #return the graph to process in the main function
     def retrieveGraph(self):
         return self.graph
+    
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
     
 if __name__ == "__main__":
     client = opencitingpy.client.Client()
