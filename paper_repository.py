@@ -13,6 +13,10 @@ class Paper:
         print("Retrieving Sources...")
         if self.sources == None:
             self.sources = [x.cited[8:] for x in client.get_references(doi)]
+        if self.metadata == None:
+            self.metadata = client.get_metadata(doi)
+            if self.metadata != []:
+                self.author = self.metadata[0].author
         self.clusters = clusters
         self.reproducibility = reproducibility
         print("Init Success!")
