@@ -55,8 +55,8 @@ def llamaAgent(pdfAPath, pdfBPath):
         custom_query_engines[index.index_id] = tranformed_query_engine
 
     custom_query_engines[graph.root_index.index_id] = graph.root_index.as_query_engine(
-        retriever_mode='simple', 
-        response_mode='tree_summarize', 
+        retriever_mode='embedding', 
+        response_mode='accumulate', 
         service_context=service_context
     )
 
@@ -64,34 +64,18 @@ def llamaAgent(pdfAPath, pdfBPath):
         custom_query_engines=custom_query_engines,
     )
 
+    
+
     prompt = f"""
-        Reproducibility is a fundamental aspect of scientific research, ensuring that the results, findings, and methodologies
-        presented in a paper can be independently validated and verified. You need to act like a Research Engineer in the 
-        field of mechanical and aerospace engineering. Part of your role involves assessing the reproducibility of academic
-        papers and assess their effectiveness in addressing specific engineering challenges. 
-
-        You are given two PDFs, Paper A and Paper B. Paper A is the original paper, which is delimited by triple backticks. Paper B is a
-        paper that cites Paper A. Your task is to check if Paper B reproduces the results of Paper A.
-
-        To analyze the reproducibility of Paper A based on the citations and content in Paper B, follow these directions:
-        
-        1. Examine Paper B citations. Look for indications of whether Paper B attempted to reproduce the results 
-        of Paper A or if it simply cited Paper A as a reference without attempting reproduction.
-        2. If Paper B states or implies that it reproduced Paper A's results, carefully scrutinize the corresponding sections or 
-        code snippets in Paper B. Compare the reported results in Paper A with those in Paper B to verify if they align.
-        3. Note any discrepancies or differences in the reproduced results between Paper A and Paper B. If Paper B successfully 
-        reproduces Paper A's results, clearly state that the reproduction was successful. On the other hand, if Paper B produces 
-        results that directly contradict or deviate significantly from Paper A's results, explicitly mention the discrepancies
-        and highlight that Paper B's results do not align with Paper A's findings.
-        4. Provide a detailed analysis of the similarities or differences between Paper A and Paper B, specifically in terms of the
-        reproduced results. Explain any modifications, variations, or potential reasons for the discrepancies, if applicable.
-
-        Based on this assessment, give it a score between 0 and 10, where 0 indicates that Paper B does not reproduce Paper A's results
-        at all, and 10 indicates that Paper B reproduces Paper A's results perfectly.
+        How correlated is Paper A with Paper B? You must respond with an integer between 0 to 10.
         """
+    response = query_engine_decompose.query(prompt)
+    print(response)
 
-    query_engine = index.as_query_engine()
-    response = query_engine.query(prompt)
+    prompt = f"""
+        Does Paper B cite Paper A?
+        """
+    response = query_engine_decompose.query(prompt)
     print(response)
 
     return 0
