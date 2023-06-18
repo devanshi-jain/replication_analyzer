@@ -83,7 +83,7 @@ def calculate_internal_score(citing_paper):
 
 def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indicator = True for paper and False for abstract
     # Extract the citations from PDF1
-    citations_pdfA = parse_pdf_citations(pdfA_path)
+    citation_pos_pdfA = parse_pdf_citations(pdfB_path)
 
     if indicator == False:
         # Extract the content of PDF2 for citation analysis
@@ -104,9 +104,9 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
                     if isinstance(element, LTTextBox) or isinstance(element, LTTextLine):
                         text = element.get_text().strip()
                         # Check if the text contains any citations from PDF1
-                        for citation in citations_pdfA:
-                            if f"[{citation}]" in text: 
-                                citations_found.append((citation, page))
+                        for citation in citation_pos_pdfA:
+                            # if f"[{citation}]" in text: 
+                            citations_found.append((citation, page))
 
     # # Generate the citation tree
     # target_paper = createPaperFromDoi("target_paper_doi")  # Replace "target_paper_doi" with the actual DOI
@@ -199,11 +199,11 @@ def check_reproduction(pdfA_path, pdfB_path, indicator, abstract = None): # indi
 
 
 # Paths to the PDF files
-pdfA_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfA.pdf"
-pdfB_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfB.pdf"
+# pdfA_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfA.pdf"
+# pdfB_path = "/Users/devanshijain/Documents/GitHub/replication_analyzer/pdfB.pdf"
 
 # Find citations in PDF2 and check if it reproduces the results of PDF1
-check_reproduction(pdfA_path, pdfB_path)
+# check_reproduction(pdfA_path, pdfB_path)
 
 
         # Your main goal is to formulate a score to assess the correlation between two papers based on reproduction status and
